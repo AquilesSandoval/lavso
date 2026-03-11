@@ -1,26 +1,77 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Colores principales */
+  --color-primary: #0A1628;
+  --color-primary-light: #1E3A5F;
+  --color-accent: #0D9488;
+  --color-accent-hover: #0F766E;
+  --color-accent-light: #CCFBF1;
+
+  /* Superficies */
+  --color-surface: #F8FAFC;
+  --color-surface-dark: #0B1120;
+  --color-card: #FFFFFF;
+  --color-card-dark: #111827;
+  --color-card-border: #E2E8F0;
+
+  /* Texto */
+  --color-muted: #64748B;
+  --color-muted-dark: #94A3B8;
+
+  /* Tipografía */
+  --font-sans: var(--font-jakarta), 'Plus Jakarta Sans', sans-serif;
+  --font-body: var(--font-dm-sans), 'DM Sans', sans-serif;
+
+  /* Sombras */
+  --shadow-card: 0 4px 24px rgba(10, 22, 40, 0.08);
+  --shadow-card-hover: 0 8px 40px rgba(10, 22, 40, 0.16);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  body {
+    font-family: var(--font-body);
+    @apply bg-surface text-primary dark:bg-surface-dark dark:text-white antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-sans);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes logo-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/80 dark:bg-white/5 backdrop-blur-md border border-white/20;
+  }
+
+  .glass-dark {
+    @apply bg-primary/80 backdrop-blur-md border border-white/10;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-accent to-blue-500 bg-clip-text text-transparent;
+  }
+
+  .section-padding {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-xl;
+  }
 }
