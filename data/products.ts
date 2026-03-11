@@ -144,8 +144,8 @@ export const products: Product[] = [
       { key: "Compatibilidad", value: "Universal (Eppendorf, Gilson, LAVSO, Brand)" },
     ],
     images: [
-      "https://images.unsplash.com/photo-1559573840-0fafb49c8b00?w=800&q=85",
-      "https://images.unsplash.com/photo-1576671414921-571574489bef?w=800&q=85",
+      "https://res.cloudinary.com/djs27ftci/image/upload/v1773262948/puntas_amarillas_hzkol9.webp",
+      "https://res.cloudinary.com/djs27ftci/image/upload/v1773262948/puntas_amarillas_hzkol9.webp",
     ],
     rating: 4.6,
     reviewCount: 112,
