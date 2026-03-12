@@ -5,8 +5,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle, Loader2, Send } from "lucide-react";
-import { Product } from "@/data/products";
+import { CheckCircle, Loader2, Send, AlertTriangle } from "lucide-react";
+import { Product, ProductVariant } from "@/data/products";
 
 const schema = z.object({
   fullName: z.string().min(2, "Nombre demasiado corto"),
@@ -21,10 +21,19 @@ type FormData = z.infer<typeof schema>;
 
 interface PurchaseFormProps {
   product: Product;
+  selectedVariant?: ProductVariant | null;
+  selectedAttributes?: Record<string, string>;
 }
 
-export default function PurchaseForm({ product }: PurchaseFormProps) {
+export default function PurchaseForm({
+  product,
+  selectedVariant,
+  selectedAttributes = {},
+}: PurchaseFormProps) {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+
+  const hasVariants = product.selectableAttributes.length > 0;
+  const variantReady = !hasVariants || selectedVariant != null;
 
   const {
     register,
@@ -34,6 +43,7 @@ export default function PurchaseForm({ product }: PurchaseFormProps) {
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
   const onSubmit = async (data: FormData) => {
+    if (!variantReady) return;
     setStatus("loading");
     try {
       const response = await fetch("/api/solicitud-compra", {
@@ -44,6 +54,12 @@ export default function PurchaseForm({ product }: PurchaseFormProps) {
           productId: product.id,
           productName: product.name,
           productCategory: product.category,
+          productBrand: product.brand,
+          variantSku: selectedVariant?.sku ?? null,
+          variantAttributes: Object.entries(selectedAttributes).map(([name, value]) => ({
+            name,
+            value,
+          })),
         }),
       });
       if (!response.ok) throw new Error("Error al enviar");
@@ -78,7 +94,9 @@ export default function PurchaseForm({ product }: PurchaseFormProps) {
                 ¡Solicitud enviada!
               </h4>
               <p className="text-muted dark:text-muted-dark text-sm">
-                Recibimos tu solicitud para <strong className="text-primary dark:text-white">{product.name}</strong>. Nuestro equipo te contactará pronto.
+                Recibimos tu solicitud para{" "}
+                <strong className="text-primary dark:text-white">{product.name}</strong>. Nuestro equipo te
+                contactará pronto.
               </p>
               <button
                 onClick={() => setStatus("idle")}
@@ -96,6 +114,27 @@ export default function PurchaseForm({ product }: PurchaseFormProps) {
               onSubmit={handleSubmit(onSubmit)}
               className="space-y-3"
             >
+              {/* Variant required notice */}
+              {hasVariants && !variantReady && (
+                <div className="p-3 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300 text-sm flex items-center gap-2">
+                  <AlertTriangle className="w-4 h-4 shrink-0" />
+                  Selecciona todas las variantes del producto antes de solicitar.
+                </div>
+              )}
+
+              {/* Selected variant summary */}
+              {selectedVariant && (
+                <div className="p-3 rounded-lg bg-teal-50 dark:bg-teal-900/20 border border-teal-200 dark:border-teal-700 text-xs space-y-0.5">
+                  <p className="font-semibold text-teal-800 dark:text-teal-200">Variante seleccionada:</p>
+                  {Object.entries(selectedAttributes).map(([name, value]) => (
+                    <p key={name} className="text-teal-700 dark:text-teal-300">
+                      {name}: <span className="font-medium">{value}</span>
+                    </p>
+                  ))}
+                  <p className="text-teal-600 dark:text-teal-400 font-mono">SKU: {selectedVariant.sku}</p>
+                </div>
+              )}
+
               {status === "error" && (
                 <div className="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-sm">
                   Ocurrió un error. Por favor intenta de nuevo.
@@ -213,8 +252,8 @@ export default function PurchaseForm({ product }: PurchaseFormProps) {
 
               <button
                 type="submit"
-                disabled={status === "loading"}
-                className="w-full flex items-center justify-center gap-2 px-5 py-3 bg-accent hover:bg-accent-hover disabled:opacity-60 text-white font-semibold rounded-xl text-sm transition-colors duration-200"
+                disabled={status === "loading" || (hasVariants && !variantReady)}
+                className="w-full flex items-center justify-center gap-2 px-5 py-3 bg-accent hover:bg-accent-hover disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold rounded-xl text-sm transition-colors duration-200"
               >
                 {status === "loading" ? (
                   <>

@@ -6,14 +6,14 @@ import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import ProductCard from "@/components/ProductCard";
 import ProductFilters from "@/components/ProductFilters";
-import { products, Category } from "@/data/products";
+import { products, categories, getBasePrice } from "@/data/products";
 
 function TiendaContent() {
   const searchParams = useSearchParams();
-  const initialCategory = (searchParams.get("categoria") as Category) || "Todos";
+  const initialCategory = searchParams.get("categoria") || "Todos";
 
-  const [selectedCategory, setSelectedCategory] = useState<Category | "Todos">(
-    initialCategory as Category | "Todos"
+  const [selectedCategory, setSelectedCategory] = useState<string>(
+    initialCategory
   );
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("relevancia");
@@ -30,17 +30,17 @@ function TiendaContent() {
       result = result.filter(
         (p) =>
           p.name.toLowerCase().includes(q) ||
-          p.shortDescription.toLowerCase().includes(q) ||
+          p.description.toLowerCase().includes(q) ||
           p.category.toLowerCase().includes(q)
       );
     }
 
     switch (sortBy) {
       case "precio-asc":
-        result.sort((a, b) => (a.price ?? Infinity) - (b.price ?? Infinity));
+        result.sort((a, b) => (getBasePrice(a) ?? Infinity) - (getBasePrice(b) ?? Infinity));
         break;
       case "precio-desc":
-        result.sort((a, b) => (b.price ?? -Infinity) - (a.price ?? -Infinity));
+        result.sort((a, b) => (getBasePrice(b) ?? -Infinity) - (getBasePrice(a) ?? -Infinity));
         break;
       case "rating":
         result.sort((a, b) => b.rating - a.rating);

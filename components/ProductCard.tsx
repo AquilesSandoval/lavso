@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { Star, ShoppingCart } from "lucide-react";
-import { Product } from "@/data/products";
+import { Product, getBasePrice, hasStock } from "@/data/products";
 import { formatPrice } from "@/lib/utils";
 
 interface ProductCardProps {
@@ -18,6 +18,9 @@ const categoryColors: Record<string, string> = {
   Consumibles: "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300",
   Reactivos: "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300",
   "Equipo Científico": "bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-300",
+  Agitadores: "bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-300",
+  Abatelenguas: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",
+  Balanzas: "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300",
 };
 
 export default function ProductCard({ product, delay = 0 }: ProductCardProps) {
@@ -42,7 +45,7 @@ export default function ProductCard({ product, delay = 0 }: ProductCardProps) {
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
               className="object-cover group-hover:scale-105 transition-transform duration-500"
             />
-            {!product.inStock && (
+            {!hasStock(product) && (
               <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
                 <span className="px-2 py-1 bg-white/90 text-primary text-xs font-semibold rounded">
                   Solicitar cotización
@@ -62,7 +65,7 @@ export default function ProductCard({ product, delay = 0 }: ProductCardProps) {
               {product.name}
             </h3>
             <p className="text-xs text-muted dark:text-muted-dark leading-relaxed mb-3 line-clamp-2 flex-1">
-              {product.shortDescription}
+              {product.description}
             </p>
 
             {/* Rating */}
@@ -87,11 +90,11 @@ export default function ProductCard({ product, delay = 0 }: ProductCardProps) {
             {/* Price & CTA */}
             <div className="flex items-center justify-between">
               <span className={`font-sans font-bold text-sm ${
-                product.price === null
+                getBasePrice(product) === null
                   ? "text-accent text-xs"
                   : "text-primary dark:text-white"
               }`}>
-                {formatPrice(product.price)}
+                {formatPrice(getBasePrice(product))}
               </span>
               <div className="w-8 h-8 rounded-lg bg-accent/10 dark:bg-accent/20 flex items-center justify-center group-hover:bg-accent transition-colors duration-200">
                 <ShoppingCart className="w-4 h-4 text-accent group-hover:text-white transition-colors duration-200" />

@@ -75,7 +75,7 @@ export default function ReviewSection({ reviews: initialReviews, rating, reviewC
     e.preventDefault();
     if (!newAuthor.trim() || !newComment.trim()) return;
     const review: Review = {
-      id: Date.now(),
+      id: String(Date.now()),
       author: newAuthor,
       institution: newInstitution || "Usuario verificado",
       rating: newRating,

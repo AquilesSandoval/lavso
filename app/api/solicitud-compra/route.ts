@@ -3,15 +3,20 @@ import { sendPurchaseRequestEmail } from "@/lib/email";
 import { z } from "zod";
 
 const schema = z.object({
-  productId: z.number(),
+  productId: z.string().min(1),
   productName: z.string().min(1),
   productCategory: z.string().min(1),
+  productBrand: z.string().optional(),
   fullName: z.string().min(2),
   email: z.string().email(),
   phone: z.string().min(10),
   company: z.string().min(2),
   quantity: z.coerce.number().min(1),
   message: z.string().optional(),
+  variantSku: z.string().nullable().optional(),
+  variantAttributes: z
+    .array(z.object({ name: z.string(), value: z.string() }))
+    .optional(),
 });
 
 export async function POST(request: NextRequest) {

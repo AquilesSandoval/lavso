@@ -1,15 +1,23 @@
 import nodemailer from "nodemailer";
 
+export interface VariantAttributePair {
+  name: string;
+  value: string;
+}
+
 export interface PurchaseRequestData {
-  productId: number;
+  productId: string;
   productName: string;
   productCategory: string;
+  productBrand?: string;
   fullName: string;
   email: string;
   phone: string;
   company: string;
   quantity: number;
   message?: string;
+  variantSku?: string | null;
+  variantAttributes?: VariantAttributePair[];
 }
 
 function createTransporter() {
@@ -26,8 +34,35 @@ function createTransporter() {
 
 export async function sendPurchaseRequestEmail(data: PurchaseRequestData) {
   const transporter = createTransporter();
-
   const recipientEmail = process.env.RECIPIENT_EMAIL || "dev@vex-mx.com";
+
+  const variantSection =
+    data.variantSku || (data.variantAttributes && data.variantAttributes.length > 0)
+      ? `
+      <div class="section-title">Variante Seleccionada</div>
+      <div class="info-grid">
+        ${
+          data.variantAttributes
+            ?.map(
+              (attr) => `
+          <div class="info-item">
+            <div class="info-label">${attr.name}</div>
+            <div class="info-value">${attr.value}</div>
+          </div>`
+            )
+            .join("") ?? ""
+        }
+        ${
+          data.variantSku
+            ? `
+        <div class="info-item" style="grid-column: 1/-1;">
+          <div class="info-label">SKU</div>
+          <div class="info-value" style="font-family: monospace;">${data.variantSku}</div>
+        </div>`
+            : ""
+        }
+      </div>`
+      : "";
 
   const htmlContent = `
 <!DOCTYPE html>
@@ -72,11 +107,21 @@ export async function sendPurchaseRequestEmail(data: PurchaseRequestData) {
           <div class="info-label">Categoría</div>
           <div class="info-value">${data.productCategory}</div>
         </div>
+        ${
+          data.productBrand
+            ? `<div class="info-item">
+          <div class="info-label">Marca</div>
+          <div class="info-value">${data.productBrand}</div>
+        </div>`
+            : ""
+        }
         <div class="info-item">
           <div class="info-label">Cantidad solicitada</div>
           <div class="info-value">${data.quantity} unidad(es)</div>
         </div>
       </div>
+
+      ${variantSection}
 
       <div class="section-title">Datos del Solicitante</div>
       <div class="info-grid">
@@ -116,12 +161,23 @@ export async function sendPurchaseRequestEmail(data: PurchaseRequestData) {
 </html>
 `;
 
+  const variantText =
+    data.variantAttributes && data.variantAttributes.length > 0
+      ? `\nVariante: ${data.variantAttributes.map((a) => `${a.name}: ${a.value}`).join(", ")}${data.variantSku ? `\nSKU: ${data.variantSku}` : ""}`
+      : data.variantSku
+        ? `\nSKU: ${data.variantSku}`
+        : "";
+
+  const subject = data.variantSku
+    ? `🔬 Nueva solicitud: ${data.productName} (${data.variantSku}) — ${data.fullName}`
+    : `🔬 Nueva solicitud: ${data.productName} — ${data.fullName}`;
+
   await transporter.sendMail({
     from: `"LAVSO Web" <${process.env.SMTP_USER}>`,
     to: recipientEmail,
     replyTo: data.email,
-    subject: `🔬 Nueva solicitud: ${data.productName} — ${data.fullName}`,
+    subject,
     html: htmlContent,
-    text: `Nueva solicitud de compra\n\nProducto: ${data.productName}\nCategoría: ${data.productCategory}\nCantidad: ${data.quantity}\n\nSolicitante: ${data.fullName}\nEmpresa: ${data.company}\nEmail: ${data.email}\nTeléfono: ${data.phone}\n${data.message ? `\nMensaje: ${data.message}` : ""}`,
+    text: `Nueva solicitud de compra\n\nProducto: ${data.productName}\nCategoría: ${data.productCategory}${data.productBrand ? `\nMarca: ${data.productBrand}` : ""}${variantText}\nCantidad: ${data.quantity}\n\nSolicitante: ${data.fullName}\nEmpresa: ${data.company}\nEmail: ${data.email}\nTeléfono: ${data.phone}\n${data.message ? `\nMensaje: ${data.message}` : ""}`,
   });
 }

@@ -1,8 +1,9 @@
 import { Metadata } from "next";
 import ProductCard from "@/components/ProductCard";
-import { products, categories, Category } from "@/data/products";
-import { FlaskConical, Package, Beaker, Microscope } from "lucide-react";
+import { products, categories } from "@/data/products";
+import { FlaskConical, Package, Beaker, Microscope, Scale, Layers } from "lucide-react";
 import Link from "next/link";
+import { LucideIcon } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Productos",
@@ -10,19 +11,27 @@ export const metadata: Metadata = {
     "Catálogo de materiales, consumibles, reactivos y equipo científico de laboratorio de LAVSO.",
 };
 
-const categoryIcons: Record<Category, typeof FlaskConical> = {
+const categoryIcons: Record<string, LucideIcon> = {
   Materiales: Package,
   Consumibles: FlaskConical,
   Reactivos: Beaker,
   "Equipo Científico": Microscope,
+  Agitadores: Layers,
+  Abatelenguas: Package,
+  Balanzas: Scale,
 };
 
-const categoryDescriptions: Record<Category, string> = {
+const categoryDescriptions: Record<string, string> = {
   Materiales: "Cristalería, material plástico, viales, papel filtro, tamices, guantes, mascarillas, goggles y equipo de seguridad.",
   Consumibles: "Puntas, microtubos, membranas, filtros y otros consumibles de alta calidad para todas las aplicaciones.",
   Reactivos: "Distribuidor autorizado de marcas líderes: Sigma-Aldrich, Merck, J.T. Baker, Honeywell, Thermo Fisher y más.",
   "Equipo Científico": "Balanzas, microscopios, centrífugas, agitadores, autoclaves, ultracongeladores, refrigeradores y más.",
+  Agitadores: "Agitadores vortex, mecánicos y de varilla para laboratorio. Marcas IKA, KIMAX, Poly Lab y más.",
+  Abatelenguas: "Abatelenguas de madera desechables para exploración médica y diagnóstico general.",
+  Balanzas: "Balanzas de precisión semi-micro y analíticas con calibración automática y pantallas táctiles.",
 };
+
+const fallbackIcon = FlaskConical;
 
 export default function ProductosPage() {
   return (
@@ -47,7 +56,7 @@ export default function ProductosPage() {
         <div className="container-custom">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-16">
             {categories.map((cat) => {
-              const Icon = categoryIcons[cat];
+              const Icon = categoryIcons[cat] ?? fallbackIcon;
               const catProducts = products.filter((p) => p.category === cat);
               return (
                 <a
@@ -59,7 +68,9 @@ export default function ProductosPage() {
                     <Icon className="w-5 h-5 text-accent group-hover:text-white transition-colors duration-300" />
                   </div>
                   <h3 className="font-sans font-semibold text-primary dark:text-white mb-1">{cat}</h3>
-                  <p className="text-xs text-muted dark:text-muted-dark line-clamp-2 mb-2">{categoryDescriptions[cat]}</p>
+                  <p className="text-xs text-muted dark:text-muted-dark line-clamp-2 mb-2">
+                    {categoryDescriptions[cat] ?? "Productos de laboratorio de alta calidad."}
+                  </p>
                   <span className="text-xs font-semibold text-accent">{catProducts.length} productos</span>
                 </a>
               );
@@ -69,7 +80,7 @@ export default function ProductosPage() {
           {/* Products by category */}
           {categories.map((cat) => {
             const catProducts = products.filter((p) => p.category === cat);
-            const Icon = categoryIcons[cat];
+            const Icon = categoryIcons[cat] ?? fallbackIcon;
             return (
               <div
                 key={cat}
@@ -78,7 +89,7 @@ export default function ProductosPage() {
               >
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-9 h-9 rounded-xl bg-accent/10 flex items-center justify-center">
-                    <Icon className="w-4.5 h-4.5 text-accent" />
+                    <Icon className="w-4 h-4 text-accent" />
                   </div>
                   <div>
                     <h2 className="font-sans font-bold text-xl text-primary dark:text-white">{cat}</h2>

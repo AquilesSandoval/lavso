@@ -1,18 +1,18 @@
 "use client";
 
-import { Category, categories } from "@/data/products";
+import { categories } from "@/data/products";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 
 interface ProductFiltersProps {
-  selectedCategory: Category | "Todos";
-  onCategoryChange: (cat: Category | "Todos") => void;
+  selectedCategory: string;
+  onCategoryChange: (cat: string) => void;
   searchQuery: string;
   onSearchChange: (q: string) => void;
   sortBy: string;
   onSortChange: (sort: string) => void;
 }
 
-const allCategories: (Category | "Todos")[] = ["Todos", ...categories];
+const allCategories: string[] = ["Todos", ...categories];
 
 const sortOptions = [
   { value: "relevancia", label: "Relevancia" },
@@ -21,21 +21,23 @@ const sortOptions = [
   { value: "rating", label: "Mejor valorados" },
 ];
 
-const categoryColors: Record<string, string> = {
+const selectedColorMap: Record<string, string> = {
   Todos: "bg-primary text-white dark:bg-white dark:text-primary",
+  Agitadores: "bg-teal-600 text-white",
+  Abatelenguas: "bg-blue-600 text-white",
+  Balanzas: "bg-purple-600 text-white",
   Materiales: "bg-blue-600 text-white",
   Consumibles: "bg-purple-600 text-white",
   Reactivos: "bg-amber-500 text-white",
   "Equipo Científico": "bg-teal-600 text-white",
 };
 
-const categoryDefault: Record<string, string> = {
-  Todos: "border-gray-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:border-primary/40 dark:hover:border-white/30",
-  Materiales: "border-gray-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:border-blue-400",
-  Consumibles: "border-gray-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:border-purple-400",
-  Reactivos: "border-gray-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:border-amber-400",
-  "Equipo Científico": "border-gray-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:border-teal-400",
-};
+function getSelectedClass(cat: string): string {
+  return selectedColorMap[cat] ?? "bg-teal-600 text-white";
+}
+
+const defaultClass =
+  "border-gray-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:border-teal-400";
 
 export default function ProductFilters({
   selectedCategory,
@@ -76,9 +78,7 @@ export default function ProductFilters({
               key={cat}
               onClick={() => onCategoryChange(cat)}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all duration-200 ${
-                isSelected
-                  ? categoryColors[cat]
-                  : `bg-transparent ${categoryDefault[cat]}`
+                isSelected ? getSelectedClass(cat) : `bg-transparent ${defaultClass}`
               }`}
             >
               {cat}
@@ -87,7 +87,7 @@ export default function ProductFilters({
         })}
       </div>
 
-      {/* Sort & count row */}
+      {/* Sort */}
       <div className="flex items-center gap-3">
         <SlidersHorizontal className="w-4 h-4 text-muted dark:text-muted-dark shrink-0" />
         <select
