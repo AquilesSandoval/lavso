@@ -47,8 +47,8 @@ export const products: Product[] = [
     description:
       "Agitador vortex de tamaño compacto, versátil para múltiples usos en laboratorio. Ideal para mezclar muestras en tubos de ensayo, viales y recipientes pequeños. Operación continua o por contacto.",
     images: [
-      "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800&q=85",
-      "https://images.unsplash.com/photo-1582560475093-ba66accbc424?w=800&q=85",
+      "https://res.cloudinary.com/djs27ftci/image/upload/v1773274743/ika-0003617000_0_wcozzy.webp",
+      "https://res.cloudinary.com/djs27ftci/image/upload/v1773274743/ika-0003617000_0_wcozzy.webp",
     ],
     selectableAttributes: ["Modelo", "Pantalla", "Timer"],
     variants: [
@@ -134,8 +134,8 @@ export const products: Product[] = [
     description:
       "Abatelenguas de madera desechable para exploración médica con puntas redondas. Uso clínico y de diagnóstico general. Fabricados en madera de abedul de grado médico.",
     images: [
-      "https://images.unsplash.com/photo-1576086213369-97a306d36557?w=800&q=85",
-      "https://images.unsplash.com/photo-1614935151651-0bea6508db6b?w=800&q=85",
+      "https://res.cloudinary.com/djs27ftci/image/upload/v1773274940/lan-085-003_01_ampxuu.webp",
+      "https://res.cloudinary.com/djs27ftci/image/upload/v1773274940/lan-085-003_02_ampxuu.webp",
     ],
     selectableAttributes: ["Calidad", "Presentación"],
     variants: [
@@ -200,8 +200,8 @@ export const products: Product[] = [
     description:
       "Agitador de varilla sólida en vidrio de borosilicato con puntas redondeadas en forma de gota. Alta resistencia química y térmica. Ideal para agitar soluciones en vasos de precipitados y matraces.",
     images: [
-      "https://images.unsplash.com/photo-1603126857599-f6e157fa2fe6?w=800&q=85",
-      "https://images.unsplash.com/photo-1582560475093-ba66accbc424?w=800&q=85",
+      "https://res.cloudinary.com/djs27ftci/image/upload/v1773274995/pl-81405_0_odhe1i.webp",
+      "https://res.cloudinary.com/djs27ftci/image/upload/v1773274995/pl-81405_1_odhe1i.webp",
     ],
     selectableAttributes: ["Diámetro", "Largo"],
     variants: [
@@ -305,8 +305,8 @@ export const products: Product[] = [
     description:
       "Agitador de plástico con puntas redondas en forma de gota, fabricado en polipropileno. Autoclavable y reutilizable. Alternativa económica y segura a las varillas de vidrio.",
     images: [
-      "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800&q=85",
-      "https://images.unsplash.com/photo-1628595351029-c2bf17511435?w=800&q=85",
+      "https://res.cloudinary.com/djs27ftci/image/upload/v1773275045/61OOQZhlTOL_n9xlci.webp",
+      "https://res.cloudinary.com/djs27ftci/image/upload/v1773275045/61OOQZhlTOL_n9xlci.webp",
     ],
     selectableAttributes: ["Diámetro", "Largo"],
     variants: [
@@ -401,8 +401,8 @@ export const products: Product[] = [
     description:
       "Balanzas de precisión semi-micro con pantalla gráfica a color tipo VGA, 4 sensores infrarrojos para operación sin contacto y sistema de calibración interno AutoCal. Diseñadas para laboratorios de investigación, control de calidad y entornos regulados.",
     images: [
-      "https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?w=800&q=85",
-      "https://images.unsplash.com/photo-1628595351029-c2bf17511435?w=800&q=85",
+      "https://res.cloudinary.com/djs27ftci/image/upload/v1773275142/balanza-explorer-semi-micro-analitica-precision-categorias-sitio-web-ohaus-2024_sia8s9.webp",
+      "https://res.cloudinary.com/djs27ftci/image/upload/v1773275142/balanza-explorer-semi-micro-analitica-precision-categorias-sitio-web-ohaus-2024_sia8s9.webp",
     ],
     selectableAttributes: ["Modelo", "Capacidad", "Sensibilidad"],
     variants: [
